@@ -7,7 +7,7 @@ rm -rf ./dist && \
 npm run build && \
 git checkout gh-pages && \
 git pull origin gh-pages && \
-cp -r ./dist ./ && \
+cp -r ./dist/ ./ && \
 rm -rf ./dist && \
 git add . && \
 git commit -am "chore(publish): production code generated automatically" && \
