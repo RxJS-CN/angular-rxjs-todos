@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
-import 'rxjs/Rx';
+import './rxjs-operators';
 
 import { AppRoutingModule, routedComponents } from './app-routing.module';
 
