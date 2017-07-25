@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 
 import { Todo } from '../../models/todo.model';
 import { TodoService } from '../../services/todo.service';
@@ -11,12 +12,13 @@ import { TodoService } from '../../services/todo.service';
   templateUrl: 'todo-list.component.html'
 })
 
-export class TodoListComponent implements OnInit {
+export class TodoListComponent implements OnInit, OnDestroy {
 
   currentStatus = '';
   isAllCompleted: boolean;
   visibleTodos: Todo[] = [];
   todos$: Observable<Todo[]>;
+  todosSubscription: Subscription;
 
   constructor(
     private route: ActivatedRoute,
@@ -25,7 +27,7 @@ export class TodoListComponent implements OnInit {
 
   ngOnInit() {
 
-    this.todoService.todos$
+    this.todosSubscription = this.todoService.todos$
         .combineLatest(this.route.params.map(params => params.status))
         .subscribe(([todos, status]) => {
           localStorage.setItem('angular-rxjs-todos', JSON.stringify(todos));
@@ -45,6 +47,10 @@ export class TodoListComponent implements OnInit {
         });
 
     this.todoService.loadPersistTodos();
+  }
+
+  ngOnDestroy() {
+    this.todosSubscription.unsubscribe();
   }
 
   remove(uuid: string): void {
