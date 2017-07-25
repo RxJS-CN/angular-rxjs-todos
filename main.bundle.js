@@ -388,7 +388,7 @@ var TodoListComponent = (function () {
     }
     TodoListComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.todoService.todos$
+        this.todosSubscription = this.todoService.todos$
             .combineLatest(this.route.params.map(function (params) { return params.status; }))
             .subscribe(function (_a) {
             var todos = _a[0], status = _a[1];
@@ -408,6 +408,9 @@ var TodoListComponent = (function () {
             }
         });
         this.todoService.loadPersistTodos();
+    };
+    TodoListComponent.prototype.ngOnDestroy = function () {
+        this.todosSubscription.unsubscribe();
     };
     TodoListComponent.prototype.remove = function (uuid) {
         this.todoService.remove(uuid);
