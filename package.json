@@ -25,8 +25,8 @@
     "core-js": "^2.4.1",
     "node-uuid": "^1.4.8",
     "rxjs": "^5.1.0",
-    "todomvc-app-css": "^2.0.6",
-    "todomvc-common": "^1.0.2",
+    "todomvc-app-css": "2.0.6",
+    "todomvc-common": "1.0.2",
     "zone.js": "^0.8.4"
   },
   "devDependencies": {
