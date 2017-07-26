@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+
+import { Subscription } from 'rxjs/Subscription';
 
 import { TodoService } from '../../services/todo.service';
 
@@ -8,12 +10,14 @@ import { TodoService } from '../../services/todo.service';
   templateUrl: 'todo-footer.component.html'
 })
 
-export class TodoFooterComponent implements OnInit {
+export class TodoFooterComponent implements OnInit, OnDestroy {
 
   currentStatus = '';
   hasCount: boolean;
   hasCompleted: boolean;
   remainintCount: number;
+  routeSubscription: Subscription;
+  todosSubscription: Subscription;
 
   constructor(
     private route: ActivatedRoute,
@@ -21,16 +25,23 @@ export class TodoFooterComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.route.params
+
+    this.routeSubscription = this.route.params
         .map(params => params.status)
         .subscribe(status => this.currentStatus = status || '');
 
-    this.todoService.todos$
+    this.todosSubscription = this.todoService.todos$
         .subscribe(todos => {
           this.hasCount = !!todos.length;
           this.hasCompleted = !!todos.filter(todo => todo.completed).length;
           this.remainintCount = todos.filter(todo => !todo.completed).length;
         });
+        
+  }
+
+  ngOnDestroy() {
+    this.routeSubscription.unsubscribe();
+    this.todosSubscription.unsubscribe();
   }
 
   removeCompleted(): void {

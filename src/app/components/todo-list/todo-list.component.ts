@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
 import { Todo } from '../../models/todo.model';
@@ -17,7 +16,6 @@ export class TodoListComponent implements OnInit, OnDestroy {
   currentStatus = '';
   isAllCompleted: boolean;
   visibleTodos: Todo[] = [];
-  todos$: Observable<Todo[]>;
   todosSubscription: Subscription;
 
   constructor(

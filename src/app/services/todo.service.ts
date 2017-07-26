@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
+import { Subscription } from 'rxjs/Subscription';
 
 import { Todo } from '../models/todo.model';
 
@@ -42,12 +43,14 @@ export class TodoService {
 
   toggleAll$: Subject<boolean> = new Subject<boolean>();
 
+  immortalSubscriber: Subscription;
+
   constructor() {
 
     this.todos$ = this.update$
-                      .scan((todos: Todo[], operation: TodosOperation) => operation(todos), initialTodos)
-                      .publishReplay(1)
-                      .refCount();
+        .scan((todos: Todo[], operation: TodosOperation) => operation(todos), initialTodos)
+        .publishReplay(1)
+        .refCount();
 
     this.create$
         .map((todo: Todo): TodosOperation => {
@@ -109,6 +112,9 @@ export class TodoService {
 
     this.toggleAllTodos$
         .subscribe(this.toggleAll$);
+    
+    // Need to improve, this is to keep todo$ stream live
+    this.todos$.subscribe();
 
   }
 
