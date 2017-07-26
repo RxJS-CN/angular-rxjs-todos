@@ -2,22 +2,21 @@ import { Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
 
 import { Todo } from '../models/todo.model';
 
-const initialTodos: Todo[] = [];
+const initialTodos: Todo[] = JSON.parse(localStorage.getItem('angular-rxjs-todos')) || [];
 
 type TodosOperation = (todos: Todo[]) => Todo[];
 
 @Injectable()
 export class TodoService {
 
-  isInit = false;
-
   todos$: Observable<Todo[]>;
 
-  update$: Subject<any> = new Subject<any>();
+  update$: BehaviorSubject<TodosOperation> = new BehaviorSubject<TodosOperation>((todos: Todo[]) => todos);
 
   createTodo$: Subject<Todo> = new Subject<Todo>();
 
@@ -51,6 +50,8 @@ export class TodoService {
         .scan((todos: Todo[], operation: TodosOperation) => operation(todos), initialTodos)
         .publishReplay(1)
         .refCount();
+
+    this.todos$.forEach(todos => localStorage.setItem('angular-rxjs-todos', JSON.stringify(todos)));
 
     this.create$
         .map((todo: Todo): TodosOperation => {
@@ -112,21 +113,11 @@ export class TodoService {
 
     this.toggleAllTodos$
         .subscribe(this.toggleAll$);
-    
-    // Need to improve, this is to keep todo$ stream live
-    this.todos$.subscribe();
 
   }
 
   addTodo(title: string): void {
     this.createTodo$.next(new Todo(title));
-  }
-
-  loadPersistTodos(): void {
-    if (this.isInit) { return; }
-    const persistTodos = JSON.parse(localStorage.getItem('angular-rxjs-todos')) || [];
-    persistTodos.forEach(todo => this.createTodo$.next(todo));
-    this.isInit = true;
   }
 
   modify(todo: Todo): void {

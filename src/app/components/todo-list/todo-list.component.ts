@@ -28,7 +28,6 @@ export class TodoListComponent implements OnInit, OnDestroy {
     this.todosSubscription = this.todoService.todos$
         .combineLatest(this.route.params.map(params => params.status))
         .subscribe(([todos, status]) => {
-          localStorage.setItem('angular-rxjs-todos', JSON.stringify(todos));
           this.currentStatus = status;
           this.isAllCompleted = todos.length === todos.filter(todo => todo.completed).length;
           switch (this.currentStatus) {
@@ -44,7 +43,7 @@ export class TodoListComponent implements OnInit, OnDestroy {
           }
         });
 
-    this.todoService.loadPersistTodos();
+    // this.todoService.loadPersistTodos();
   }
 
   ngOnDestroy() {
