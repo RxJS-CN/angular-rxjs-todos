@@ -55,7 +55,7 @@ var routedComponents = [__WEBPACK_IMPORTED_MODULE_2__components_todos_todos_comp
 /***/ "../../../../../src/app/app.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<router-outlet></router-outlet>\n<footer class=\"info\">\n  <p>Double-click to edit a todo</p>\n  <p>Written by <a href=\"https://github.com/SangKa\">SangKa.Z</a></p>\n</footer>"
+module.exports = "<router-outlet></router-outlet>\r\n<footer class=\"info\">\r\n  <p>Double-click to edit a todo</p>\r\n  <p>Written by <a href=\"https://github.com/SangKa\">SangKa.Z</a></p>\r\n</footer>"
 
 /***/ }),
 
@@ -155,7 +155,7 @@ AppModule = __decorate([
 /***/ "../../../../../src/app/components/todo-footer/todo-footer.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<footer class=\"footer\" *ngIf=\"hasCount\">\n  <span class=\"todo-count\"><strong>{{ remainintCount }}</strong> {{ remainintCount === 1 ? 'item' : 'items'}} left</span>\n  <ul class=\"filters\">\n    <li>\n      <a [routerLink]=\"['']\" [class.selected]=\"currentStatus === ''\">All</a>\n    </li>\n    <li>\n      <a [routerLink]=\"['', 'active']\" [class.selected]=\"currentStatus === 'active'\">Active</a>\n    </li>\n    <li>\n      <a [routerLink]=\"['', 'completed']\" [class.selected]=\"currentStatus === 'completed'\">Completed</a>\n    </li>\n  </ul>\n  <button class=\"clear-completed\" *ngIf=\"hasCompleted\" (click)=\"removeCompleted()\">Clear Completed</button>\n</footer>"
+module.exports = "<footer class=\"footer\" *ngIf=\"hasCount\">\r\n  <span class=\"todo-count\"><strong>{{ remainintCount }}</strong> {{ remainintCount === 1 ? 'item' : 'items'}} left</span>\r\n  <ul class=\"filters\">\r\n    <li>\r\n      <a [routerLink]=\"['']\" [class.selected]=\"currentStatus === ''\">All</a>\r\n    </li>\r\n    <li>\r\n      <a [routerLink]=\"['', 'active']\" [class.selected]=\"currentStatus === 'active'\">Active</a>\r\n    </li>\r\n    <li>\r\n      <a [routerLink]=\"['', 'completed']\" [class.selected]=\"currentStatus === 'completed'\">Completed</a>\r\n    </li>\r\n  </ul>\r\n  <button class=\"clear-completed\" *ngIf=\"hasCompleted\" (click)=\"removeCompleted()\">Clear Completed</button>\r\n</footer>"
 
 /***/ }),
 
@@ -187,15 +187,19 @@ var TodoFooterComponent = (function () {
     }
     TodoFooterComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.route.params
+        this.routeSubscription = this.route.params
             .map(function (params) { return params.status; })
             .subscribe(function (status) { return _this.currentStatus = status || ''; });
-        this.todoService.todos$
+        this.todosSubscription = this.todoService.todos$
             .subscribe(function (todos) {
             _this.hasCount = !!todos.length;
             _this.hasCompleted = !!todos.filter(function (todo) { return todo.completed; }).length;
             _this.remainintCount = todos.filter(function (todo) { return !todo.completed; }).length;
         });
+    };
+    TodoFooterComponent.prototype.ngOnDestroy = function () {
+        this.routeSubscription.unsubscribe();
+        this.todosSubscription.unsubscribe();
     };
     TodoFooterComponent.prototype.removeCompleted = function () {
         this.todoService.removeCompleted();
@@ -218,7 +222,7 @@ var _a, _b;
 /***/ "../../../../../src/app/components/todo-header/todo-header.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<header class=\"header\">\n  <h1>todos</h1>\n  <input type=\"text\" class=\"new-todo\" placeholder=\"What needs to be done?\" #toggleall [(ngModel)]=\"newTodoText\" (keyup.enter)=\"addTodo(toggleall.value)\" />\n</header>"
+module.exports = "<header class=\"header\">\r\n  <h1>todos</h1>\r\n  <input type=\"text\" class=\"new-todo\" placeholder=\"What needs to be done?\" #toggleall [(ngModel)]=\"newTodoText\" (keyup.enter)=\"addTodo(toggleall.value)\" />\r\n</header>"
 
 /***/ }),
 
@@ -267,7 +271,7 @@ var _a;
 /***/ "../../../../../src/app/components/todo-item/todo-item.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<li [class.completed]=\"todo.completed\" [class.editing]=\"editing\">\n  <div class=\"view\">\n    <input type=\"checkbox\" class=\"toggle\" [checked]=\"todo.completed\" (click)=\"toggle()\">\n    <label (dblclick)=\"edit()\">{{ todo.title }}</label>\n    <button class=\"destroy\" (click)=\"remove()\"></button>\n  </div>\n  <input \n    type=\"text\"\n    class=\"edit\"\n    #edittodo\n    *ngIf=\"editing\"\n    [value]=\"todo.title\"\n    (blur)=\"stopEditing(edittodo.value)\"\n    (keyup.enter)=\"stopEditing(edittodo.value)\"\n    (keyup.escape)=\"cancelEditing()\"\n  />\n</li>"
+module.exports = "<li [class.completed]=\"todo.completed\" [class.editing]=\"editing\">\r\n  <div class=\"view\">\r\n    <input type=\"checkbox\" class=\"toggle\" [checked]=\"todo.completed\" (click)=\"toggle()\">\r\n    <label (dblclick)=\"edit()\">{{ todo.title }}</label>\r\n    <button class=\"destroy\" (click)=\"remove()\"></button>\r\n  </div>\r\n  <input \r\n    type=\"text\"\r\n    class=\"edit\"\r\n    #edittodo\r\n    *ngIf=\"editing\"\r\n    [value]=\"todo.title\"\r\n    (blur)=\"stopEditing(edittodo.value)\"\r\n    (keyup.enter)=\"stopEditing(edittodo.value)\"\r\n    (keyup.escape)=\"cancelEditing()\"\r\n  />\r\n</li>"
 
 /***/ }),
 
@@ -355,7 +359,7 @@ var _a;
 /***/ "../../../../../src/app/components/todo-list/todo-list.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<section class=\"main\" *ngIf=\"visibleTodos.length\">\n  <input type=\"checkbox\" class=\"toggle-all\" #toggleall [checked]=\"isAllCompleted\" (click)=\"toggleAll(toggleall.checked)\">\n  <ul class=\"todo-list\">\n    <todo-item \n      *ngFor=\"let todo of visibleTodos\"\n      [todo]=\"todo\"\n      (handleToggle)=\"toggle($event)\"\n      (handleRemove)=\"remove($event)\"\n      (handleModify)=\"update($event)\"\n    >\n    </todo-item>\n  </ul>\n</section>"
+module.exports = "<section class=\"main\" *ngIf=\"visibleTodos.length\">\r\n  <input type=\"checkbox\" class=\"toggle-all\" #toggleall [checked]=\"isAllCompleted\" (click)=\"toggleAll(toggleall.checked)\">\r\n  <ul class=\"todo-list\">\r\n    <todo-item \r\n      *ngFor=\"let todo of visibleTodos\"\r\n      [todo]=\"todo\"\r\n      (handleToggle)=\"toggle($event)\"\r\n      (handleRemove)=\"remove($event)\"\r\n      (handleModify)=\"update($event)\"\r\n    >\r\n    </todo-item>\r\n  </ul>\r\n</section>"
 
 /***/ }),
 
@@ -392,7 +396,6 @@ var TodoListComponent = (function () {
             .combineLatest(this.route.params.map(function (params) { return params.status; }))
             .subscribe(function (_a) {
             var todos = _a[0], status = _a[1];
-            localStorage.setItem('angular-rxjs-todos', JSON.stringify(todos));
             _this.currentStatus = status;
             _this.isAllCompleted = todos.length === todos.filter(function (todo) { return todo.completed; }).length;
             switch (_this.currentStatus) {
@@ -407,7 +410,7 @@ var TodoListComponent = (function () {
                     break;
             }
         });
-        this.todoService.loadPersistTodos();
+        // this.todoService.loadPersistTodos();
     };
     TodoListComponent.prototype.ngOnDestroy = function () {
         this.todosSubscription.unsubscribe();
@@ -442,7 +445,7 @@ var _a, _b;
 /***/ "../../../../../src/app/components/todos/todos.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<section class=\"todoapp\">\n  <todo-header></todo-header>\n  <todo-list></todo-list>\n  <todo-footer></todo-footer>\n</section>"
+module.exports = "<section class=\"todoapp\">\r\n  <todo-header></todo-header>\r\n  <todo-list></todo-list>\r\n  <todo-footer></todo-footer>\r\n</section>"
 
 /***/ }),
 
@@ -522,7 +525,9 @@ var Todo = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_Subject__ = __webpack_require__("../../../../rxjs/Subject.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_Subject___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_rxjs_Subject__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__models_todo_model__ = __webpack_require__("../../../../../src/app/models/todo.model.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_BehaviorSubject__ = __webpack_require__("../../../../rxjs/BehaviorSubject.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_BehaviorSubject___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_BehaviorSubject__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__models_todo_model__ = __webpack_require__("../../../../../src/app/models/todo.model.ts");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return TodoService; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -536,11 +541,11 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-var initialTodos = [];
+
+var initialTodos = JSON.parse(localStorage.getItem('angular-rxjs-todos')) || [];
 var TodoService = (function () {
     function TodoService() {
-        this.isInit = false;
-        this.update$ = new __WEBPACK_IMPORTED_MODULE_1_rxjs_Subject__["Subject"]();
+        this.update$ = new __WEBPACK_IMPORTED_MODULE_2_rxjs_BehaviorSubject__["BehaviorSubject"](function (todos) { return todos; });
         this.createTodo$ = new __WEBPACK_IMPORTED_MODULE_1_rxjs_Subject__["Subject"]();
         this.modifyTodo$ = new __WEBPACK_IMPORTED_MODULE_1_rxjs_Subject__["Subject"]();
         this.removeCompletedTodo$ = new __WEBPACK_IMPORTED_MODULE_1_rxjs_Subject__["Subject"]();
@@ -557,6 +562,7 @@ var TodoService = (function () {
             .scan(function (todos, operation) { return operation(todos); }, initialTodos)
             .publishReplay(1)
             .refCount();
+        this.todos$.forEach(function (todos) { return localStorage.setItem('angular-rxjs-todos', JSON.stringify(todos)); });
         this.create$
             .map(function (todo) {
             return function (todos) { return todos.concat(todo); };
@@ -608,16 +614,7 @@ var TodoService = (function () {
             .subscribe(this.toggleAll$);
     }
     TodoService.prototype.addTodo = function (title) {
-        this.createTodo$.next(new __WEBPACK_IMPORTED_MODULE_2__models_todo_model__["a" /* Todo */](title));
-    };
-    TodoService.prototype.loadPersistTodos = function () {
-        var _this = this;
-        if (this.isInit) {
-            return;
-        }
-        var persistTodos = JSON.parse(localStorage.getItem('angular-rxjs-todos')) || [];
-        persistTodos.forEach(function (todo) { return _this.createTodo$.next(todo); });
-        this.isInit = true;
+        this.createTodo$.next(new __WEBPACK_IMPORTED_MODULE_3__models_todo_model__["a" /* Todo */](title));
     };
     TodoService.prototype.modify = function (todo) {
         this.modifyTodo$.next(todo);
