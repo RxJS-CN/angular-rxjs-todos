@@ -25,7 +25,7 @@ git clone git@github.com:RxJS-CN/angular-rxjs-todos.git
 # change into the repo directory
 cd angular-rxjs-todos
 
-# install dependency
+# install dependencies
 npm install
 
 # run
@@ -33,3 +33,11 @@ npm start
 ```
 
 Then visit [http://localhost:4200](http://localhost:4200) in your browser.
+
+## React Version
+
+If you prefer React, you can checkout out [React RxJS Todos](https://github.com/RxJS-CN/react-rxjs-todos)
+
+## License
+
+MIT
